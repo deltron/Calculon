@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Computron" default="package" basedir=".">
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="bin.dir" value="${basedir}/bin" />
+	<property name="dist.dir" value="${basedir}/dist" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="etc.dir" value="${basedir}/etc" />
+	<property name="log.dir" value="${basedir}/log" />
+	<property name="output.dir" value="${basedir}/output" />
+
+	<path id="build.classpath">
+		<fileset dir="${basedir}/lib">
+			<include name="*" />
+		</fileset>
+	</path>
+
+	<!-- create a property containing all .jar files, prefix lib/, and seperated with a space -->
+	<pathconvert property="manifest.classpath" pathsep=" ">
+		<mapper>
+			<chainedmapper>
+				<flattenmapper />
+				<globmapper from="*" to="lib/*" />
+			</chainedmapper>
+		</mapper>
+
+		<path refid="build.classpath" />
+	</pathconvert>
+
+	<target name="clean">
+		<delete dir="${output.dir}" />
+		<delete dir="${bin.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+
+	<target name="prepare">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${log.dir}" />
+	</target>
+
+	<target name="compile" depends="prepare">
+		<javac destdir="${bin.dir}" classpathref="build.classpath" debug="on">
+			<src path="${src.dir}" />
+		</javac>
+	</target>
+
+	<target name="package" depends="compile">
+		<jar jarfile="${dist.dir}/Computron.jar" basedir="${bin.dir}">
+			<manifest>
+				<attribute name="Class-Path" value=". ${manifest.classpath}" />
+				<attribute name="Main-Class" value="lmc5.computron.ComputronMain" />
+			</manifest>
+		</jar>
+
+		<copy todir="${dist.dir}">
+			<fileset dir="${etc.dir}" />
+		</copy>
+
+		<copy todir="${dist.dir}/lib">
+			<fileset dir="${lib.dir}" />
+		</copy>
+	</target>
+</project>

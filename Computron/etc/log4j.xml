@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="threshold" value="INFO" />
+		<param name="target" value="System.out" />
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<!-- The default pattern: Date Priority [Category] Message\n -->
+			<param name="ConversionPattern"
+				value="%d{ABSOLUTE} %-5p [%c{1}] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="FILE"
+		class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="threshold" value="DEBUG" />
+		<param name="File" value="log/computron.log" />
+		<param name="Append" value="true" />
+
+		<!-- Rollover at midnight each day -->
+		<param name="DatePattern" value="_yyyy-MM-dd" />
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<!-- The default pattern: Date Priority [Category] Message\n -->
+			<param name="ConversionPattern"
+				value="%d{ABSOLUTE} %-5p [%c{1}] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+		<appender-ref ref="FILE" />
+	</appender>
+
+	<root>
+		<priority value="DEBUG" />
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="FILE" />
+	</root>
+</log4j:configuration>
